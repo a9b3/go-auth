@@ -25,10 +25,7 @@ test: db.starttest migrate.test
 	go test -v $$(go list ./... | grep -v /vendor/)
 
 test.watch: db.starttest migrate.test
-	@while true; do \
-		fswatch -o . | echo "hi"; \
-		test "$?" -gt 128 && break; \
-	done
+	@fswatch . | (while read; do go test -v $$(go list ./... | grep -v /vendor/); done)
 
 deps:
 	@dep ensure
