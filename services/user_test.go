@@ -17,14 +17,22 @@ var dbInstance *sql.DB
 func TestMain(m *testing.M) {
 	cfg := config.New(".test.env")
 	dbInstance = db.Open(cfg)
-
-	// db.Exec(`DROP TABLE "user";`)
+	defer dbInstance.Close()
+	dbInstance.Exec(`DELETE FROM "user";`)
 
 	code := m.Run()
-	// db.Exec(`DROP TABLE "user";`)
+	dbInstance.Exec(`DELETE FROM "user";`)
 	os.Exit(code)
 }
 
 func TestCreate(t *testing.T) {
-	UserCreate(dbInstance, "asd", "asd")
+	id := UserCreate(dbInstance, "cool", "asd")
+	user := UserGet(dbInstance, id)
+
+	if user.Email != "cool" {
+		t.Fatalf(`Created user's email "%s" must match original "%s"`, user.Email, "cool")
+	}
+	if user.ID != id {
+		t.Fatalf(`Created user's id "%s" must match original "%s"`, user.ID, id)
+	}
 }

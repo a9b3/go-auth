@@ -40,7 +40,7 @@ db.stop:
 	@docker-compose -f docker-compose.yml down --remove-orphans
 
 db.starttest:
-	@docker-compose -f docker-compose.test.yml up -d --remove-orphans
+	@docker-compose -f docker-compose.test.yml up -d --remove-orphans && sleep 1
 
 db.stoptest:
 	@docker-compose -f docker-compose.test.yml down --remove-orphans

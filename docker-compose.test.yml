@@ -5,7 +5,7 @@ version: '3'
 # have to hardcode the values here
 services:
   postgres_test:
-    image: postgres:9.6
+    image: postgres:10.5-alpine
     environment:
       POSTGRES_DB: "go_auth_test"
       POSTGRES_PASSWORD: "postgres"

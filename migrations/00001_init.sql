@@ -1,8 +1,10 @@
 -- +goose Up
 -- SQL in this section is executed when the migration is applied.
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE "user" (
-  id int NOT NULL,
+  id uuid NOT NULL DEFAULT uuid_generate_v1(),
   email text,
+  password text,
   PRIMARY KEY(id)
 );
 
