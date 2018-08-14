@@ -1,34 +1,22 @@
 package config
 
 import (
-	"github.com/spf13/viper"
+	"fmt"
+	"path"
+	"runtime"
+
+	"github.com/joho/godotenv"
 )
 
-// Config contains app cfg variables
-type Config struct {
-	Port             string
-	PostgresDB       string
-	PostgresHost     string
-	PostgresPassword string
-	PostgresPort     int
-	PostgresUser     string
-}
+// New returns map[string]string of .env vars
+func New(filename string) map[string]string {
+	_, b, _, _ := runtime.Caller(1)
+	envFilePath := path.Join(path.Dir(b), fmt.Sprintf(`../%s`, filename))
 
-// New returns Config
-func New() (*Config, error) {
-	viper.SetDefault("PORT", "9090")
-	viper.SetDefault("POSTGRESDB", "postgres")
-	viper.SetDefault("POSTGRESHOST", "localhost")
-	viper.SetDefault("POSTGRESPASSWORD", "postgres")
-	viper.SetDefault("POSTGRESPORT", 5440)
-	viper.SetDefault("POSTGRESUSER", "postgres")
-
-	viper.AutomaticEnv()
-
-	cfg := new(Config)
-	if err := viper.Unmarshal(cfg); err != nil {
-		return nil, err
+	envMap, err := godotenv.Read(envFilePath)
+	if err != nil {
+		panic(fmt.Errorf("fatal error: %s", err))
 	}
 
-	return cfg, nil
+	return envMap
 }

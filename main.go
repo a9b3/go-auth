@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/esayemm/auth/config"
@@ -9,16 +8,15 @@ import (
 )
 
 func main() {
-	cfg, _ := config.New()
-
-	fmt.Printf("%+v", cfg)
+	cfg := config.New(".env")
+	// dbInstance := db.Open(cfg)
 
 	http.HandleFunc("/register", handlers.Register)
 	http.HandleFunc("/authenticate", handlers.Authenticate)
 	http.HandleFunc("/verify", handlers.Verify)
 	http.HandleFunc("/logout", handlers.Logout)
 
-	if err := http.ListenAndServe(":"+cfg.Port, nil); err != nil {
+	if err := http.ListenAndServe(":"+cfg["PORT"], nil); err != nil {
 		panic(err)
 	}
 }

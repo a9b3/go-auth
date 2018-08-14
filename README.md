@@ -1,11 +1,12 @@
-# Go Starter
+# Go Auth
 
-Go server boilerplate.
+Auth service
 
 ## Prereqs
 
-- Install [go-watcher](https://github.com/canthefason/go-watcher) for automatically restarting server upon file change during dev.
-- Use [dep](https://github.com/golang/dep) for dependencies.
+- [dep](https://github.com/golang/dep): dependencies
+- [canthefason/go-watcher](https://github.com/canthefason/go-watcher): automatically restarting server upon file change during dev
+- [pressly/goose](https://github.com/pressly/goose): working with migrations
 
 ## Debugging
 
