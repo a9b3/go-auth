@@ -30,7 +30,6 @@ test.watch: db.starttest migrate.test
 		test "$?" -gt 128 && break; \
 	done
 
-
 deps:
 	@dep ensure
 

@@ -1,12 +1,14 @@
 version: '3'
 
+# docker-compose always reads from .env there's no way to explicitly set this
+# file to something else so we cannot make use of the values from .test.env we
+# have to hardcode the values here
 services:
   postgres_test:
     image: postgres:9.6
-    env_file: ".test.env"
     environment:
-      POSTGRES_DB: "${POSTGRESDB}"
-      POSTGRES_PASSWORD: "${POSTGRESPASSWORD}"
-      POSTGRES_USER: "${POSTGRESUSER}"
+      POSTGRES_DB: "go_auth_test"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
     ports:
-      - "${POSTGRESPORT}:5432"
+      - "5441:5432"

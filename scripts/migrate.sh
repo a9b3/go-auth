@@ -10,12 +10,14 @@ if ! [ -x "$(command -v goose)" ]; then
   exit 1
 fi
 
+# Set variables based on supplied flags
 while getopts 'c:' flag; do
   case "${flag}" in
     c) config="${OPTARG}" ;;
   esac
 done
 
+# Error checking the supplied flags
 if [ ! -f "$config" ]; then
   echo 'Error: must provide valid file to -c flag.' >&2
   exit 1
@@ -24,5 +26,5 @@ fi
 source "$config"
 
 goose -dir migrations postgres \
-  "postgres://$POSTGRESUSER:$POSTGRESPASSWORD@$POSTGRESHOST:$POSTGRESPORT/$POSTGRESDB?sslmode=disable"\
+  "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=$POSTGRES_SSLMODE"\
   up

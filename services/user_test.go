@@ -2,7 +2,6 @@ package services
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"testing"
 
@@ -17,7 +16,6 @@ var dbInstance *sql.DB
 
 func TestMain(m *testing.M) {
 	cfg := config.New(".test.env")
-	fmt.Printf("%+v", cfg)
 	dbInstance = db.Open(cfg)
 
 	// db.Exec(`DROP TABLE "user";`)
