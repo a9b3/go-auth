@@ -16,7 +16,9 @@ func TestMain(m *testing.M) {
 	cfg := config.New("../.test.env")
 	dbInstance = db.Open(cfg)
 	defer dbInstance.Close()
+	dbInstance.Exec(`DELETE FROM "user";`)
 
 	code := m.Run()
+	dbInstance.Exec(`DELETE FROM "user";`)
 	os.Exit(code)
 }

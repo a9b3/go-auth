@@ -9,9 +9,9 @@ import (
 
 // User is the definition of a user.
 type User struct {
-	Email    string
-	ID       string
-	Password string
+	Email    string `json:"email"`
+	ID       string `json:"id"`
+	Password string `json:"-"`
 }
 
 // UserCreate inserts new user row into the user table.

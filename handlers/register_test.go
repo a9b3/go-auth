@@ -1,19 +1,24 @@
 package handlers
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/esayemm/auth/services"
 )
 
 func TestRegisterHandler(t *testing.T) {
-	req, err := http.NewRequest("POST", "/register", nil)
+	jsonBytes, err := json.Marshal(RegisterBody{Email: "foo", Password: "123"})
+	req, err := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(CreateHealthCheckHandler(dbInstance))
+	handler := http.HandlerFunc(CreateRegisterHandler(dbInstance))
 
 	handler.ServeHTTP(rr, req)
 
@@ -21,8 +26,16 @@ func TestRegisterHandler(t *testing.T) {
 		t.Errorf("handler must return 200 but got %v", status)
 	}
 
-	expected := `{"DB":true}`
-	if rr.Body.String() != expected {
-		t.Errorf("response must be %v but got %v", expected, rr.Body.String())
+	user := services.User{}
+	err = json.Unmarshal(rr.Body.Bytes(), &user)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	if user.Email != "foo" {
+		t.Fatalf(`Created email must equal original`)
+	}
+	if user.Password != "" {
+		t.Fatalf(`Returned object must not contain password`)
 	}
 }
