@@ -7,10 +7,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func TestCreate(t *testing.T) {
+func TestUserCreate(t *testing.T) {
 	email := "cool"
 	password := "asd"
-	id := UserCreate(dbInstance, email, password)
+	err, id := UserCreate(dbInstance, email, password)
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
 	user := UserGet(dbInstance, id)
 
 	if user.Email != email {
@@ -24,5 +27,10 @@ func TestCreate(t *testing.T) {
 	}
 	if !VerifyPassword(user.Password, password) {
 		t.Fatalf(`Created user's password "%s" must verify with original "%s"`, user.Password, password)
+	}
+
+	err, _ = UserCreate(dbInstance, email, password)
+	if err == nil {
+		t.Fatalf(`Creating user with same email should error`)
 	}
 }
