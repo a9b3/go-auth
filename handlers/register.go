@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -21,25 +20,23 @@ func CreateRegisterHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		jsn, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			panic(fmt.Errorf("fatal error parsing request body: %s", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
 		registerBody := RegisterBody{}
 		err = json.Unmarshal(jsn, &registerBody)
 		if err != nil {
-			panic(fmt.Errorf("fatal error decoding json: %s", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
-		err, id := services.UserCreate(db, registerBody.Email, registerBody.Password)
+		user, err := services.UserCreate(db, registerBody.Email, registerBody.Password)
 		if err != nil {
-			panic(fmt.Errorf("fatal error creating user: %s", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-
-		user := services.UserGet(db, id)
 
 		userJSON, err := json.Marshal(user)
 		if err != nil {
-			panic(fmt.Errorf("fatal error : %s", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
 		w.Header().Set("Content-Type", "application/json")

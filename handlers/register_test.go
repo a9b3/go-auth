@@ -8,34 +8,30 @@ import (
 	"testing"
 
 	"github.com/esayemm/auth/services"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRegisterHandler(t *testing.T) {
-	jsonBytes, err := json.Marshal(RegisterBody{Email: "foo", Password: "123"})
+	email := "foo"
+	password := "123"
+
+	jsonBytes, err := json.Marshal(RegisterBody{Email: email, Password: password})
 	req, err := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(CreateRegisterHandler(dbInstance))
+	http.HandlerFunc(CreateRegisterHandler(dbInstance)).ServeHTTP(rr, req)
 
-	handler.ServeHTTP(rr, req)
+	assert.Equal(t, rr.Code, http.StatusOK, `handler must return 200`)
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler must return 200 but got %v", status)
-	}
-
-	user := services.User{}
+	var user services.User
 	err = json.Unmarshal(rr.Body.Bytes(), &user)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
 
-	if user.Email != "foo" {
-		t.Fatalf(`Created email must equal original`)
-	}
-	if user.Password != "" {
-		t.Fatalf(`Returned object must not contain password`)
-	}
+	assert.Equal(t, user.Email, email, `Created email must equal original`)
+	assert.Empty(t, user.Password, "returned object must not contain password")
 }
