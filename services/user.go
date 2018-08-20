@@ -2,7 +2,6 @@ package services
 
 import (
 	"database/sql"
-	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -14,11 +13,27 @@ type User struct {
 	Password string `json:"-"`
 }
 
-// UserCreate inserts new user row into the user table.
-func UserCreate(db *sql.DB, email string, password string) (error, string) {
+// UserGet returns user given the id.
+func UserGet(db *sql.DB, id string) (User, error) {
+	user := User{}
+	err := db.QueryRow(`
+	SELECT id, email, password FROM "user" WHERE id=$1
+	`, id).Scan(&user.ID, &user.Email, &user.Password)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+// UserCreate inserts new user row into the user table and returns the inserted
+// id.
+func UserCreate(db *sql.DB, email string, password string) (User, error) {
+	user := User{}
+
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
-		panic(fmt.Errorf("fatal error generating password: %s", err))
+		return user, err
 	}
 	hashedPassword := string(hash)
 
@@ -27,21 +42,16 @@ func UserCreate(db *sql.DB, email string, password string) (error, string) {
 	INSERT INTO "user" (email, password)
 	VALUES ($1, $2)
 	RETURNING id`, email, hashedPassword).Scan(&id)
-
-	return err, id
-}
-
-// UserGet returns user given id
-func UserGet(db *sql.DB, id string) User {
-	user := User{}
-	err := db.QueryRow(`
-	SELECT id, email, password FROM "user" WHERE id=$1
-	`, id).Scan(&user.ID, &user.Email, &user.Password)
 	if err != nil {
-		panic(fmt.Errorf("fatal error querying user: %s", err))
+		return user, err
 	}
 
-	return user
+	user, err = UserGet(db, id)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
 }
 
 // VerifyPassword will return boolean for a password match
