@@ -12,3 +12,7 @@ services:
       POSTGRES_USER: "postgres"
     ports:
       - "5441:5432"
+  redis_test:
+    image: redis:4.0.11-alpine
+    ports:
+      - "6381:6379"
