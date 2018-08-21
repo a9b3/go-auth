@@ -14,8 +14,10 @@ var dbClient *sql.DB
 
 func TestMain(m *testing.M) {
 	cfg := config.New("../.test.env")
-	_, dbClient = db.DBClient(cfg)
+
+	dbClient, _ = db.DBClient(cfg)
 	defer dbClient.Close()
+
 	dbClient.Exec(`DELETE FROM "user";`)
 
 	code := m.Run()

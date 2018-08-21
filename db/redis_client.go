@@ -5,7 +5,7 @@ import (
 )
 
 // RedisClient return an instance of redis.Client
-func RedisClient(addr string, password string, db int) (error, *redis.Client) {
+func RedisClient(addr string, password string, db int) (*redis.Client, error) {
 	var client *redis.Client
 	client = redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -14,7 +14,7 @@ func RedisClient(addr string, password string, db int) (error, *redis.Client) {
 	})
 	_, err := client.Ping().Result()
 	if err != nil {
-		return err, client
+		return client, err
 	}
-	return nil, client
+	return client, nil
 }

@@ -7,8 +7,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// Open returns a *sql.DB
-func DBClient(cfg map[string]string) (error, *sql.DB) {
+// DBClient returns a *sql.DB
+func DBClient(cfg map[string]string) (*sql.DB, error) {
 	var db *sql.DB
 	db, err := sql.Open("postgres", fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
@@ -20,11 +20,11 @@ func DBClient(cfg map[string]string) (error, *sql.DB) {
 		cfg["POSTGRES_SSLMODE"]),
 	)
 	if err != nil {
-		return err, db
+		return db, err
 	}
 	if err := db.Ping(); err != nil {
-		return err, db
+		return db, err
 	}
 
-	return nil, db
+	return db, nil
 }

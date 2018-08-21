@@ -12,13 +12,13 @@ import (
 func main() {
 	cfg := config.New(".env")
 
-	err, dbInstance := db.DBClient(cfg)
+	dbInstance, err := db.DBClient(cfg)
 	if err != nil {
 		panic(err)
 	}
 	defer dbInstance.Close()
 
-	err, redisClient := db.RedisClient(
+	redisClient, err := db.RedisClient(
 		fmt.Sprintf(`%s:%s`, cfg["REDIS_HOST"], cfg["REDIS_PORT"]),
 		cfg["REDIS_PASSWORD"],
 		0,

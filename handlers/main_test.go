@@ -19,10 +19,10 @@ var cfg map[string]string
 func TestMain(m *testing.M) {
 	cfg = config.New("../.test.env")
 
-	_, dbClient = db.DBClient(cfg)
+	dbClient, _ = db.DBClient(cfg)
 	defer dbClient.Close()
 
-	_, redisClient = db.RedisClient(
+	redisClient, _ = db.RedisClient(
 		fmt.Sprintf(`%s:%s`, cfg["REDIS_HOST"], cfg["REDIS_PORT"]),
 		cfg["REDIS_PASSWORD"],
 		0,
