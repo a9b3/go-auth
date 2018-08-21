@@ -8,7 +8,8 @@ import (
 )
 
 // Open returns a *sql.DB
-func Open(cfg map[string]string) *sql.DB {
+func DBClient(cfg map[string]string) (error, *sql.DB) {
+	var db *sql.DB
 	db, err := sql.Open("postgres", fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg["POSTGRES_HOST"],
@@ -19,11 +20,11 @@ func Open(cfg map[string]string) *sql.DB {
 		cfg["POSTGRES_SSLMODE"]),
 	)
 	if err != nil {
-		panic(err)
+		return err, db
 	}
 	if err := db.Ping(); err != nil {
-		panic(err)
+		return err, db
 	}
 
-	return db
+	return nil, db
 }

@@ -13,9 +13,9 @@ type HealthCheckResponse struct {
 }
 
 // CreateHealthCheckHandler acts as a closure for handler's dependencies.
-func CreateHealthCheckHandler(db *sql.DB) http.HandlerFunc {
+func CreateHealthCheckHandler(dbClient *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		dbPingErr := db.Ping()
+		dbPingErr := dbClient.Ping()
 		healthCheckResponse := HealthCheckResponse{
 			DB: dbPingErr == nil,
 		}

@@ -13,7 +13,7 @@ func TestHealthCheckHandler(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(CreateHealthCheckHandler(dbInstance))
+	handler := http.HandlerFunc(CreateHealthCheckHandler(dbClient))
 
 	handler.ServeHTTP(rr, req)
 

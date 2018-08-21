@@ -10,15 +10,16 @@ import (
 )
 
 // Shared instance of db connection to be used by local tests
-var dbInstance *sql.DB
+var dbClient *sql.DB
+var cfg map[string]string
 
 func TestMain(m *testing.M) {
-	cfg := config.New("../.test.env")
-	dbInstance = db.Open(cfg)
-	defer dbInstance.Close()
-	dbInstance.Exec(`DELETE FROM "user";`)
+	cfg = config.New("../.test.env")
+	_, dbClient = db.DBClient(cfg)
+	defer dbClient.Close()
+	dbClient.Exec(`DELETE FROM "user";`)
 
 	code := m.Run()
-	dbInstance.Exec(`DELETE FROM "user";`)
+	dbClient.Exec(`DELETE FROM "user";`)
 	os.Exit(code)
 }

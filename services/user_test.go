@@ -13,7 +13,7 @@ func TestUserCreate(t *testing.T) {
 	email := "cool"
 	password := "asd"
 
-	user, err := UserCreate(dbInstance, email, password)
+	user, err := UserCreate(dbClient, email, password)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -49,6 +49,6 @@ func TestUserCreate(t *testing.T) {
 		),
 	)
 
-	_, err = UserCreate(dbInstance, email, password)
+	_, err = UserCreate(dbClient, email, password)
 	assert.Error(t, err, `Creating user with same email should error`)
 }
