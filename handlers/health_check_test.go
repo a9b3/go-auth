@@ -13,7 +13,7 @@ func TestHealthCheckHandler(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(CreateHealthCheckHandler(dbClient))
+	handler := http.HandlerFunc(CreateHealthCheckHandler(dbClient, redisClient))
 
 	handler.ServeHTTP(rr, req)
 
@@ -21,7 +21,7 @@ func TestHealthCheckHandler(t *testing.T) {
 		t.Errorf("handler must return 200 but got %v", status)
 	}
 
-	expected := `{"DB":true}`
+	expected := `{"db":true,"redis":true}`
 	if rr.Body.String() != expected {
 		t.Errorf("response must be %v but got %v", expected, rr.Body.String())
 	}

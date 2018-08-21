@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/esayemm/auth/config"
@@ -10,12 +11,24 @@ import (
 
 func main() {
 	cfg := config.New(".env")
+
 	err, dbInstance := db.DBClient(cfg)
 	if err != nil {
 		panic(err)
 	}
+	defer dbInstance.Close()
 
-	http.HandleFunc("/health_check", handlers.CreateHealthCheckHandler(dbInstance))
+	err, redisClient := db.RedisClient(
+		fmt.Sprintf(`%s:%s`, cfg["REDIS_HOST"], cfg["REDIS_PORT"]),
+		cfg["REDIS_PASSWORD"],
+		0,
+	)
+	if err != nil {
+		panic(err)
+	}
+	defer redisClient.Close()
+
+	http.HandleFunc("/health_check", handlers.CreateHealthCheckHandler(dbInstance, redisClient))
 	http.HandleFunc("/register", handlers.CreateRegisterHandler(dbInstance, cfg))
 	http.HandleFunc("/authenticate", handlers.Authenticate)
 	http.HandleFunc("/verify", handlers.Verify)

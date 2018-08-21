@@ -7,6 +7,7 @@ Auth service
 - [dep](https://github.com/golang/dep): dependencies
 - [canthefason/go-watcher](https://github.com/canthefason/go-watcher): automatically restarting server upon file change during dev
 - [pressly/goose](https://github.com/pressly/goose): working with migrations
+- Create `.env` file copy over contents of `.test.env` and then fix the values
 
 ## Debugging
 
