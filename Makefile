@@ -38,16 +38,16 @@ deps:
 	@dep ensure
 
 db.start:
-	@docker-compose -f docker-compose.yml up -d --remove-orphans && sleep 2
+	@docker-compose -f docker-compose.yml up -d && sleep 2
 
 db.stop:
-	@docker-compose -f docker-compose.yml down --remove-orphans
+	@docker-compose -f docker-compose.yml down
 
 db.starttest:
-	@docker-compose -f docker-compose.test.yml up -d --remove-orphans && sleep 2
+	@docker-compose -f docker-compose.test.yml up -d && sleep 2
 
 db.stoptest:
-	@docker-compose -f docker-compose.test.yml down --remove-orphans
+	@docker-compose -f docker-compose.test.yml down
 
 migrate:
 	@./scripts/migrate.sh -c .env
