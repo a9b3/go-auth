@@ -1,17 +1,15 @@
 package services
 
 import (
-	"fmt"
 	"net/smtp"
 )
 
 // Send will send email
 func Send(from string, pass string, to string, subject string, body string) error {
-	msg := fmt.Sprintf(`From: %s
-	To: %s
-	Subject: %s
-	%s
-	`, from, to, subject, body)
+	msg := "From: " + from + "\n" +
+		"To: " + to + "\n" +
+		"Subject: " + subject + "\n\n" +
+		body
 
 	err := smtp.SendMail(
 		"smtp.gmail.com:587",

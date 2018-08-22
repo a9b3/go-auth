@@ -22,7 +22,7 @@ func TestRegisterHandler(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	http.HandlerFunc(CreateRegisterHandler(dbClient, cfg)).ServeHTTP(rr, req)
+	http.HandlerFunc(CreateRegisterHandler(dbClient, redisClient, cfg)).ServeHTTP(rr, req)
 
 	assert.Equal(t, rr.Code, http.StatusOK, `handler must return 200`)
 

@@ -29,7 +29,7 @@ func main() {
 	defer redisClient.Close()
 
 	http.HandleFunc("/health_check", handlers.CreateHealthCheckHandler(dbInstance, redisClient))
-	http.HandleFunc("/register", handlers.CreateRegisterHandler(dbInstance, cfg))
+	http.HandleFunc("/register", handlers.CreateRegisterHandler(dbInstance, redisClient, cfg))
 	http.HandleFunc("/authenticate", handlers.Authenticate)
 	http.HandleFunc("/verify", handlers.Verify)
 	http.HandleFunc("/logout", handlers.Logout)

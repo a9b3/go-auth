@@ -41,13 +41,13 @@ db.start:
 	@docker-compose -f docker-compose.yml up -d && sleep 2
 
 db.stop:
-	@docker-compose -f docker-compose.yml down
+	@docker-compose -f docker-compose.yml down --remove-orphans
 
 db.starttest:
 	@docker-compose -f docker-compose.test.yml up -d && sleep 2
 
 db.stoptest:
-	@docker-compose -f docker-compose.test.yml down
+	@docker-compose -f docker-compose.test.yml down --remove-orphans
 
 migrate:
 	@./scripts/migrate.sh -c .env
